@@ -1,6 +1,13 @@
 # proyecto-cloud
 
-Aplicación usando Exprees.js, Node.js y MongoDB
+|  **#** | **Código** | **Apellidos, Nombre** |
+| :---: | :---: | :---: |
+|  1 | 201810112 | Bacigalupo, Renato|
+|  2 | 201810554 | Barreto Zavaleta, Jeanlee |
+
+## Knote
+
+Aplicación que usa Exprees.js, Node.js y MongoDB
 
 ## Funcionalidad
 
