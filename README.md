@@ -40,40 +40,40 @@ La aplicación estará en la siguiente ruta http://localhost:3000
 
 ## Contenerización de la aplicación
 
-En esta sección vamos a empaquetar la aplicación en un contenedor Docker. En el `Dockerfile` se especifica la copia de los ficheros del programa hacia la imagen ubuntu (alpine) con Node.js instalado.
+En esta sección vamos a convertir la aplicación en un contenedor Docker. En el `Dockerfile` se especifica la copia de los ficheros del programa que pasarán a la imagen ubuntu (alpine) con Node.js instalado.
 
     FROM node:16.15.1-alpine3.16
     COPY . .
     RUN npm install
     CMD [ "node", "index.js" ]
 
-El siguiente comando se utilza para construir la imagen de la aplicación Knote considerando el Dockerfile previo
+Con el siguiente comando se construye la imagen de la aplicación Knote considerando el Dockerfile previo
 
     docker build -t knote .
 
 ### Corriendo en Docker
 
-Para la base de datos podemos correr MongoDB como un conenedor de Docker. Pero antes de eso debemos establecer la conexión entre ambos contenedores (el de `knote` y el de `mongo`).
+La base de datos MongoDB también se puede correr como un conenedor Docker. Pero antes se tiene que establecer la conexión para que ambos contenedores (el de `knote` y el de `mongo`) se alcancen.
 
 El siguiente comando nos ayuda a crear un Docker Network para estos contenedores:
 
     docker network create knote
 
-Ahora solo queda correr MongoDB con:
+Para correr MongoDB como contenedor usa el siguiente comando:
     
     docker run -d --name=mongo --network=knote mongo
 
-Y el siguiente comando es para la aplicación Knote:
+Y el siguiente es para la aplicación Knote:
 
     docker run --name=knote --network=knote -p 3000:3000 \
         -e MONGO_URL=mongodb://mongo:27017/dev knote
 
 > Aquí puedes reemplazar la imagen local `knote` por una ya subida a Docker Hub `jeanlee23/knote-js`
 
-Algo a destacar es que para la variable de entorno `MONGO_URL` el valor del hostname es `mongo`, precisamente este es el nombre que se le asigno al contenedor MongoDB mediante el flag `--name=mongo`
+**Nota:** la variable de entorno `MONGO_URL` tiene como valor de hostname `mongo`, precisamente este es el nombre que se le asigno al contenedor de MongoDB mediante el flag `--name=mongo`
 
 
-AquAhora la aplicación corriendo en Docker es accesible desde la ruta http://localhost:3000/
+Ahora se puede acceder a la aplicación corriendo en Docker desde la ruta http://localhost:3000/
 
 ## Kubernetes
 
