@@ -38,9 +38,46 @@ Para levantar la aplicación debe ejecutar el siguiente comando
 La aplicación estará en la siguiente ruta http://localhost:3000
 
 
-### Kubernetes
+## Contenerización de la aplicación
 
-Para crear un cluster kubernetes necesitas tener instalado Minikube y kubectl (este último necesita de un hipervisor, lo más común es usarlo con VirtualBox).
+En esta sección vamos a empaquetar la aplicación en un contenedor Docker. En el `Dockerfile` se especifica la copia de los ficheros del programa hacia la imagen ubuntu (alpine) con Node.js instalado.
+
+    FROM node:16.15.1-alpine3.16
+    COPY . .
+    RUN npm install
+    CMD [ "node", "index.js" ]
+
+El siguiente comando se utilza para construir la imagen de la aplicación Knote considerando el Dockerfile previo
+
+    docker build -t knote .
+
+### Corriendo en Docker
+
+Para la base de datos podemos correr MongoDB como un conenedor de Docker. Pero antes de eso debemos establecer la conexión entre ambos contenedores (el de `knote` y el de `mongo`).
+
+El siguiente comando nos ayuda a crear un Docker Network para estos contenedores:
+
+    docker network create knote
+
+Ahora solo queda correr MongoDB con:
+    
+    docker run -d --name=mongo --network=knote mongo
+
+Y el siguiente comando es para la aplicación Knote:
+
+    docker run --name=knote --network=knote -p 3000:3000 \
+        -e MONGO_URL=mongodb://mongo:27017/dev knote
+
+> Aquí puedes reemplazar la imagen local `knote` por una ya subida a Docker Hub `jeanlee23/knote-js`
+
+Algo a destacar es que para la variable de entorno `MONGO_URL` el valor del hostname es `mongo`, precisamente este es el nombre que se le asigno al contenedor MongoDB mediante el flag `--name=mongo`
+
+
+AquAhora la aplicación corriendo en Docker es accesible desde la ruta http://localhost:3000/
+
+## Kubernetes
+
+Para crear un cluster kubernetes se requiere la instalación de Minikube y kubectl (este último necesita de un hipervisor, lo más común es usarlo con VirtualBox).
 
 Con Minikube instaldo, puedes crear el clúster con el siguiente comando:
 
