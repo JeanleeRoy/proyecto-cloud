@@ -1,0 +1,13 @@
+SELENIUM
+
+Download Selenium IDE from https://www.selenium.dev/
+
+Open Project Cloud Computing Project Tests.side
+
+Run Test
+
+LIGHTHOUSE:
+
+npm install -g lighthouse
+
+lighthouse <url>
