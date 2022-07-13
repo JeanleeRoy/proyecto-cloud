@@ -140,6 +140,12 @@ Un problema que ocurre cuando realizamos las replicas es que las imágenes que s
 
 ## Testing
 
+Para hacer un script para probar la app, utilizamos la aplicación Selenium. Esta tiene distintas vistas, nosotros utilizamos el IDE, ya que es más gráfico y permite ver la ejecución. Luego, creamos el siguiente script:
 
+![Testeo](images/Testing.png)
+
+Este sube una nueva nota a la nube, y este proceso se repite una cantidad de veces.
 
 ## Trabajo futuro
+
+Para un trabajo futuro podríamos intentar agregar más funcionalidad a las features mostradas anteriormente. Por ejemplo, podríamos automatizar nuestro proceso de escalar la aplicación con Auto-Scaling. Además, podemos mejorar nuestra implementación de extractores para agregar uno al servicio de LoadBalancing de nuestra aplicación. Así podemos monitorear ese servicio importante directamente.
