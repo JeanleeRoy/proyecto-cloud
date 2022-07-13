@@ -13,7 +13,7 @@ Aplicación que usa Exprees.js, Node.js y MongoDB
 
 El usuario selecciona una imagen, agrega un comentario y se guarda en su lista personal.
 
-![App](app.gif)
+![App](images/app.gif)
 
 Elegimos esta aplicación porque cuenta con los componentes de backend, frontend y una base de datos que ayuda a persistir la información brindada por un usario. 
 
@@ -96,3 +96,50 @@ El comando manda todos los archivos YAML del directorio `kubernetes`
 Para acceder a la aplicación desplegada utiliza el siguiente comando:
 
     minikube service knote --url
+
+La arquitectura a alto nivel de nuestra aplicación desplegada en kubernetes sería la siguiente:
+
+![Arquitectura inical](images/simple-k8s.jpg)
+
+## Escalabilidad
+
+La ventaja que nos brinda Kubernetes con el manejo de nuetros contenedores para la aplicación y la base de datos en disitntos pods es que podemos escalar la aplicación de forma sencilla.
+
+Lo que tenemos que realizar para lograr esto es hacer varias réplicas del pod `knote` mediante el siguiente comando:
+
+    kubectl scale --replicas=3 deployment/knote
+
+Por si solo este comando solo se encarga de las replicas, pero para que los pods puedan ser accedidos por el usuario nos apoyamos del servicio de tipo LoadBalancer que creamos cuando desplegamos la aplicación en kubernetes (el detalle de este servico se puede ver en el manifiesto [knote.yaml](kubernetes/knote.yaml))
+
+Ahora cuando mostramos los pods de nuestro cluster vemos a los tres de `knote` y el correspondiente a la base de datos `mongo`
+
+    NAME                    READY   STATUS    RESTARTS        AGE
+    knote-599cb59959-klm5n  1/1     Running   1 (12h ago)     12h
+    knote-599cb59959-ksh6r  1/1     Running   1 (12h ago)     12h
+    knote-599cb59959-lzc9v  1/1     Running   1 (12h ago)     13h
+    mongo-786dcc9b86-n6czn  1/1     Running   1 (12h ago)     13h
+
+La arquitectura del cluster hasta este punto es la siguiente.
+
+![Arquitectura inical](images/replicas-k8s.jpg)
+
+
+## Statefulness
+
+Un problema que ocurre cuando realizamos las replicas es que las imágenes que subimos no siempre se visualizan. Esto se debe a que cada pod knote guarda las imagenes en su propio *file system* de manera local. Entonces, cuando el LoadBalancer redirige las peticiones para renderizar las imagenes en el navegador hacia alguno de los pods knote, habrá situaciones en las que el pod selecionado no tenga la imagen y por ende esta no se podrá visualzar. A continución se muestra una evidencia de dicha situación.
+
+![Arquitectura inical](images/glitch.png)
+
+![Arquitectura inical](images/minio.jpg)
+
+## Monitoreo
+
+
+
+![Arquitectura inical](images/prometheus.jpg)
+
+## Testing
+
+
+
+## Trabajo futuro

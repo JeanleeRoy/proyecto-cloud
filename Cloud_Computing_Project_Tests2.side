@@ -1,0 +1,95 @@
+{
+  "id": "0b62ab30-96d0-4ed2-8dad-f1e213d16f08",
+  "version": "2.0",
+  "name": "Cloud Computing Project",
+  "url": "http://192.168.59.104:31318",
+  "tests": [{
+    "id": "bb13a226-c391-4b6d-88fa-0b09f0258d6e",
+    "name": "ImageTesting",
+    "commands": [{
+      "id": "c233e537-0a6f-41c0-ba30-a2431e055e3e",
+      "comment": "",
+      "command": "times",
+      "target": "50",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c90f6701-0eb6-4a1e-ba5c-c24070de48cc",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5004adc4-ca6d-4b4f-bb3c-c06ba3fb3aba",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1294x741",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "bd64eee1-c17c-44e9-98d3-52ff2286aa17",
+      "comment": "",
+      "command": "click",
+      "target": "name=description",
+      "targets": [
+        ["name=description", "name"],
+        ["css=.f4", "css:finder"],
+        ["xpath=//textarea[@name='description']", "xpath:attributes"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aa09e322-c8b8-41dc-be7e-b2565702bf46",
+      "comment": "",
+      "command": "type",
+      "target": "name=description",
+      "targets": [
+        ["name=description", "name"],
+        ["css=.f4", "css:finder"],
+        ["xpath=//textarea[@name='description']", "xpath:attributes"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": " ![](/img/redis.png)\\nredis"
+    }, {
+      "id": "264d4c7f-a1cc-448e-bb9a-83932b05df02",
+      "comment": "",
+      "command": "click",
+      "target": "name=publish",
+      "targets": [
+        ["name=publish", "name"],
+        ["css=.mv3:nth-child(2) > .link", "css:finder"],
+        ["xpath=//input[@name='publish']", "xpath:attributes"],
+        ["xpath=//li[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c86787c-0a30-46a1-b8b1-44feb041c45f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.pt0",
+      "targets": [
+        ["css=.pt0", "css:finder"],
+        ["xpath=//body", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e982f36a-d7b5-4383-bace-bda8f472dca6",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "3f5800d0-715a-480f-b4e2-7319a7616aff",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["bb13a226-c391-4b6d-88fa-0b09f0258d6e"]
+  }],
+  "urls": ["http://192.168.59.110:30932/", "http://192.168.59.104:30599/"],
+  "plugins": []
+}
