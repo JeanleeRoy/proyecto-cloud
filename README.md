@@ -178,17 +178,28 @@ Con esto se agregan los pods correspondientes a prometheus y grafana
     pod/prometheus-prometheus-kube-prometheus-prometheus-0              2/2     Running   4 (12h ago)     29h
     pod/prometheus-prometheus-node-exporter-g7swj                       1/1     Running   2 (12h ago)     29h
 
-Para acceder a la UI de Prometheus exponemos el servicio correspondiente con el puerto 9090
+Para acceder a la UI de Prometheus rederigimos el servicio correspondiente con el puerto 9090
 
     kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090
 
-Y para Grafana exponemos su deployent al puerto 3000
+![Prometheus UI](images/prom-ui.png)
+> En esta vista se observa una consulta simple en prometheus para revisar el uso de cpu
+
+Y para Grafana rederigimos su deployment al puerto 3000
     
     kubectl port-forward deployment.apps/prometheus-grafana 3000
+
+![Grafana UI](images/grafana-ui.png)
+> En esta vista se observa la información del clúster como el uso de cpu y memoria en Grafana
 
 La imagen final de nuestra arquitectura con Prometheus quedaría de la siguiente manera:
 
 ![Arquitectura inical](images/prometheus.jpg)
+
+### Exporters
+
+Ṕara que prometheus pueda visualizar nuestro servicio de MongoDB utilizamos un *exporter-node*. COn este la data relacionada a la base de datos se expuso a una ruta dedicada a sus metricas. Sin embargo en la visualización con Grafana solo pudimos observar el uso de memoria.
+
 
 ## Testing
 
@@ -198,6 +209,19 @@ Para hacer un script para probar la app, utilizamos la aplicación Selenium. Est
 
 Este sube una nueva nota a la nube, y este proceso se repite una cantidad de veces.
 
+### Alertas
+
+Un apartado que no logramos integrar y que se quedó en desarrollo fueron las alertas. Con grafana pudimos visualizar cómo es que luego de las pruebas con multiple peticiones a la aplicación había un incremento del uso de la red y uso de Disco:
+
+![Network Utilization](images/net-utilization.png)
+
+Configuramos una alerta para que luego de un umbral (i.e. 200 kB/s) llegue una alerta a un canal de Slack dedicado solo a dichas alertas:
+
+![Slack alerts](images/slack-alerts.png)
+> Hicimos una pequeña prueba para evaluar la integración con Slack
+
+Pese a haber integrado la alerta con Slack no se llegó a tener una alerta luego de que el uso de red pasó el umbrral.
+
 ## Trabajo futuro
 
-Para un trabajo futuro podríamos intentar agregar más funcionalidad a las features mostradas anteriormente. Por ejemplo, podríamos automatizar nuestro proceso de escalar la aplicación con Auto-Scaling. Además, podemos mejorar nuestra implementación de extractores para agregar uno al servicio de LoadBalancing de nuestra aplicación. Así podemos monitorear ese servicio importante directamente.
+Para un trabajo futuro podríamos intentar agregar más funcionalidad a las features mostradas anteriormente. Por ejemplo, podríamos automatizar nuestro proceso de escalar la aplicación con Auto-Scaling. Además, podemos mejorar nuestra implementación de extractores para agregar uno al servicio de LoadBalancing de nuestra aplicación. Así podemos monitorear ese servicio tan importante directamente.
