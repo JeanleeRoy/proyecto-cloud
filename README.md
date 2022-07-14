@@ -150,7 +150,43 @@ Por último, eliminamos la versión anterior de la aplicación del clúster y de
 
 ## Monitoreo
 
+Para el monitoreo del cluster utilizmos Prometheus y para la visualización de las métricas Grafana. Ambas herramientas las instalamos mediante el manejador de paquetes para kubernetes [Helm](https://helm.sh/). 
 
+Primeros agregamos Prometheus a helm
+
+    $ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    $ helm repo add stable https://charts.helm.sh/stable
+    $ helm repo update
+
+Y lo instalamos al cluster con el siguiente comando
+
+    helm install prometheus prometheus-community/kube-prometheus-stack
+
+Con esto se agregan los pods correspondientes a prometheus y grafana
+
+    NAME                                                                READY   STATUS    RESTARTS        AGE
+    pod/alertmanager-prometheus-kube-prometheus-alertmanager-0          2/2     Running   4 (12h ago)     29h
+    pod/knote-599cb59959-klm5n                                          1/1     Running   3 (12h ago)     26h
+    pod/knote-599cb59959-ksh6r                                          1/1     Running   3 (12h ago)     26h
+    pod/knote-599cb59959-lzc9v                                          1/1     Running   4 (12h ago)     27h
+    pod/knote-599cb59959-sxhkn                                          1/1     Running   3 (12h ago)     26h
+    pod/minio-99c775b45-kt6md                                           1/1     Running   2 (12h ago)     27h
+    pod/mongo-786dcc9b86-n6czn                                          1/1     Running   2 (12h ago)     27h
+    pod/prometheus-grafana-648fc7cb4-2djpn                              3/3     Running   6 (12h ago)     29h
+    pod/prometheus-kube-prometheus-operator-b97b8786b-kwmpv             1/1     Running   3 (2m ago)      29h
+    pod/prometheus-kube-state-metrics-544b49996d-lk7kc                  1/1     Running   5 (2m21s ago)   29h
+    pod/prometheus-prometheus-kube-prometheus-prometheus-0              2/2     Running   4 (12h ago)     29h
+    pod/prometheus-prometheus-node-exporter-g7swj                       1/1     Running   2 (12h ago)     29h
+
+Para acceder a la UI de Prometheus exponemos el servicio correspondiente con el puerto 9090
+
+    kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090
+
+Y para Grafana exponemos su deployent al puerto 3000
+    
+    kubectl port-forward deployment.apps/prometheus-grafana 3000
+
+La imagen final de nuestra arquitectura con Prometheus quedaría de la siguiente manera:
 
 ![Arquitectura inical](images/prometheus.jpg)
 
