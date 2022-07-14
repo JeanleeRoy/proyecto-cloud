@@ -130,7 +130,23 @@ Un problema que ocurre cuando realizamos las replicas es que las imágenes que s
 
 ![Arquitectura inical](images/glitch.png)
 
+Para corregir esto lo que hicimos fue utilizar [MinIO](https://github.com/minio/minio), un servicio de almacenamiento de objetos de código abierto. Con MinIO las imagenes se pueden guardar en un lugar central donde todos los pods pueden acceder a ellas. Así es como quedaría nuestra arquitectura luego de agregar MinIO a la aplicación:
+
 ![Arquitectura inical](images/minio.jpg)
+
+Con knote (y sus replicas) como la aplicación primaria para crear las notas, MongoDB para almacenar el texto de las notas y MinIO para guardar las imagenes de las notas.
+
+Para lograr esta arquitectura tuvimos que crear una nueva imagen de nuestra aplicación con soporte para MinIO. Se modificó el `index.js` y se empaquetó la aplicación en la imagen `jeanlee23/knote-js:2.0.0` la cual espera tres variables de entorno adicionales:
+
+1. `MINIO_HOST`: corresponde al nombre del contenedor MinIO.
+2. `MINIO_ACCESS_KEY`: la clave para acceder al pod MinIO.
+3. `MINIO_SECRET_KEY`: el secreto que debe presentar junto con la clave para autenticarse con MinIO
+
+Se cambió el recurso de Deployment en `knote.yaml` con la nueva imagen y las variables adicionales. Así mismo, se agregó un nuevo maniefiesto `minio.yaml` donde se estableció la configuración completa con la definición del Deployment, Service y el PersistenVolumeClaim necesarios para MinIO.
+
+Por último, eliminamos la versión anterior de la aplicación del clúster y desplegamos la aplicación con las nuevas configuraciones con el comando:
+
+    kubectl apply -f kubebernetes
 
 ## Monitoreo
 
